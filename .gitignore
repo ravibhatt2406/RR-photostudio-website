@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Raw uncompressed assets folder
-portfolio/
+# Raw uncompressed root staging folder (ignored in git)
+/portfolio/
+
 
