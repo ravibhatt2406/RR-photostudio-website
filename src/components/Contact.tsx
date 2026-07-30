@@ -214,9 +214,12 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-primary-foreground mb-1">Email Us</h4>
-                    <p className="text-primary-foreground/70">
-                      vinayakcreation9024@gmail.com<br />
-                    </p>
+                    <a
+                      href="mailto:rrweddingfilmer@gmail.com"
+                      className="text-primary-foreground/70 hover:text-gold transition-colors"
+                    >
+                      rrweddingfilmer@gmail.com
+                    </a>
                   </div>
                 </div>
 
@@ -240,14 +243,18 @@ const Contact = () => {
               <h4 className="font-semibold text-foreground mb-4">Follow Us</h4>
               <div className="flex gap-4">
                 <a
-                  href="#"
+                  href="https://www.instagram.com/rr.wedding.udaipur?igsh=MW4zc2V1NWVkM3hycg=="
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center hover:bg-gold hover:text-foreground transition-colors group"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-5 h-5 text-muted-foreground group-hover:text-foreground" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.facebook.com/share/1HM5XC4oX1/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center hover:bg-gold hover:text-foreground transition-colors group"
                   aria-label="Facebook"
                 >

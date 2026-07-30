@@ -85,8 +85,8 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-gold" />
-                <a href="mailto:vinayakcreation9024@gmail.com" className="text-background/70 hover:text-gold transition-colors">
-                  vinayakcreation9024@gmail.com
+                <a href="mailto:rrweddingfilmer@gmail.com" className="text-background/70 hover:text-gold transition-colors">
+                  rrweddingfilmer@gmail.com
                 </a>
               </li>
             </ul>
@@ -94,7 +94,9 @@ const Footer = () => {
               <p className="text-sm text-background/60 mb-3">Follow us for more:</p>
               <div className="flex gap-3">
                 <a
-                  href="#"
+                  href="https://www.instagram.com/rr.wedding.udaipur?igsh=MW4zc2V1NWVkM3hycg=="
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center hover:bg-gold transition-colors group"
                   aria-label="Instagram"
                 >
@@ -103,7 +105,9 @@ const Footer = () => {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href="https://www.facebook.com/share/1HM5XC4oX1/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center hover:bg-gold transition-colors group"
                   aria-label="Facebook"
                 >
