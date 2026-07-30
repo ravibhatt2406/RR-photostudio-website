@@ -8,7 +8,13 @@ import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 // 1. Dynamic Photo Glob Import
-const photoModules = import.meta.glob('/src/assets/portfolio/**/*.{jpg,jpeg,png,webp}', { eager: true });
+const photoModules = import.meta.glob(
+  [
+    '../assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
+    '/src/assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
+  ],
+  { eager: true }
+);
 
 interface PhotoItem {
   src: string;
@@ -28,7 +34,13 @@ const formatCategoryLabel = (folderName: string): string => {
 };
 
 // 2. Dynamic Video Glob Import
-const videoModules = import.meta.glob('/src/assets/portfolio/videos/*.mp4', { eager: true });
+const videoModules = import.meta.glob(
+  [
+    '../assets/portfolio/videos/*.{mp4,MP4}',
+    '/src/assets/portfolio/videos/*.{mp4,MP4}',
+  ],
+  { eager: true }
+);
 const videoList = Object.entries(videoModules).map(([path, mod]: [string, any]) => {
   const filename = path.split("/").pop() || "";
   return {
@@ -51,22 +63,25 @@ const videoTitles = [
 const Gallery: React.FC = () => {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
-  // Build photo items array with categories
+  // Build photo items array with categories (deduplicated by unique src)
   const { photos, categories } = useMemo(() => {
     const items: PhotoItem[] = [];
     const categorySet = new Set<string>();
+    const seenSrc = new Set<string>();
 
     Object.entries(photoModules).forEach(([pathStr, mod]: [string, any]) => {
-      // e.g. pathStr = "/src/assets/portfolio/candid/photo_1.jpg"
+      const src = mod?.default || mod;
+      if (!src || typeof src !== "string" || seenSrc.has(src)) return;
+
       const parts = pathStr.split("/");
-      // Find the folder under 'portfolio'
       const portIdx = parts.indexOf("portfolio");
       if (portIdx !== -1 && portIdx < parts.length - 2) {
         const folder = parts[portIdx + 1];
         if (folder !== "rotate" && folder !== "videos") {
+          seenSrc.add(src);
           categorySet.add(folder);
           items.push({
-            src: mod.default || mod,
+            src,
             categoryFolder: folder,
             categoryLabel: formatCategoryLabel(folder),
             filename: parts[parts.length - 1],
@@ -79,6 +94,13 @@ const Gallery: React.FC = () => {
       id: folder,
       label: formatCategoryLabel(folder),
     }));
+
+    if (typeof window !== "undefined") {
+      console.log(
+        `[Gallery] Loaded ${items.length} unique photos across ${categoryList.length} categories:`,
+        categoryList.map((c) => c.label).join(", ")
+      );
+    }
 
     return { photos: items, categories: categoryList };
   }, []);

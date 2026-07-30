@@ -8,7 +8,13 @@ import {
 } from "@/components/ui/carousel";
 
 // Import videos dynamically
-const videoModules = import.meta.glob('/src/assets/portfolio/videos/*.mp4', { eager: true });
+const videoModules = import.meta.glob(
+  [
+    '../assets/portfolio/videos/*.{mp4,MP4}',
+    '/src/assets/portfolio/videos/*.{mp4,MP4}',
+  ],
+  { eager: true }
+);
 const videoList = Object.entries(videoModules).map(([path, mod]: [string, any]) => {
   const filename = path.split('/').pop() || '';
   return {

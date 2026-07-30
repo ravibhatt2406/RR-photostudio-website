@@ -1,8 +1,57 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Dynamically import all images from src/assets/portfolio subfolders
-const imageModules = import.meta.glob('/src/assets/portfolio/**/*.{jpg,jpeg,png,webp}', { eager: true });
-const allImageUrls: string[] = Object.values(imageModules).map((mod: any) => mod.default || mod);
+// Fallback images directly imported to guarantee gallery is NEVER empty on any environment
+import heroWedding from "@/assets/hero-wedding.jpg";
+import portfolio1 from "@/assets/portfolio-new-1.jpg";
+import portfolio2 from "@/assets/portfolio-new-2.jpg";
+import portfolio3 from "@/assets/portfolio-new-3.jpg";
+import portfolio4 from "@/assets/portfolio-new-4.jpg";
+import portfolio5 from "@/assets/portfolio-new-5.jpg";
+
+const staticFallbackImages = [
+  heroWedding,
+  portfolio1,
+  portfolio2,
+  portfolio3,
+  portfolio4,
+  portfolio5,
+];
+
+// Dynamically import all images from assets/portfolio subfolders using relative and absolute paths
+const imageModules = import.meta.glob(
+  [
+    "../assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}",
+    "/src/assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}",
+  ],
+  { eager: true }
+);
+
+// Deduplicate glob results by unique image URL
+const getUniqueUrls = (modules: Record<string, any>): string[] => {
+  const urlSet = new Set<string>();
+  Object.values(modules).forEach((mod: any) => {
+    const url = mod?.default || mod;
+    if (url && typeof url === "string") {
+      urlSet.add(url);
+    }
+  });
+  return Array.from(urlSet);
+};
+
+const globUrls: string[] = getUniqueUrls(imageModules);
+const allImageUrls: string[] =
+  globUrls.length > 0 ? globUrls : staticFallbackImages;
+
+if (typeof window !== "undefined") {
+  console.log(
+    `[LivingGallery] Discovered ${globUrls.length} unique portfolio images via import.meta.glob.`
+  );
+  if (globUrls.length === 0) {
+    console.warn(
+      `[LivingGallery] No portfolio images discovered via glob. Using ${staticFallbackImages.length} static fallback assets.`
+    );
+  }
+}
 
 const GRID_CELL_COUNT = 12; // 3 rows of 4 on desktop, 6 rows of 2 on mobile
 
@@ -12,44 +61,48 @@ interface CellState {
   isFading: boolean;
 }
 
+const getRandomImage = (urls: string[], excludeSet: Set<string>): string => {
+  if (urls.length === 0) return "";
+  const available = urls.filter((url) => !excludeSet.has(url));
+  if (available.length === 0) {
+    return urls[Math.floor(Math.random() * urls.length)];
+  }
+  return available[Math.floor(Math.random() * available.length)];
+};
+
+const createInitialCells = (
+  urls: string[],
+  recentSet: Set<string>
+): CellState[] => {
+  if (urls.length === 0) return [];
+  const initialSet = new Set<string>();
+  const initialCells: CellState[] = [];
+  const count = Math.min(GRID_CELL_COUNT, urls.length);
+
+  for (let i = 0; i < count; i++) {
+    const url = getRandomImage(urls, initialSet);
+    initialSet.add(url);
+    recentSet.add(url);
+    initialCells.push({
+      currentUrl: url,
+      nextUrl: null,
+      isFading: false,
+    });
+  }
+
+  return initialCells;
+};
+
 export const LivingGallery: React.FC = () => {
-  const [cells, setCells] = useState<CellState[]>([]);
   const recentUrlsRef = useRef<Set<string>>(new Set());
 
-  // Helper to pick a random item from array excluding specific items
-  const getRandomImage = (excludeSet: Set<string>): string => {
-    const available = allImageUrls.filter((url) => !excludeSet.has(url));
-    if (available.length === 0) {
-      // Fallback if all are excluded
-      return allImageUrls[Math.floor(Math.random() * allImageUrls.length)];
-    }
-    return available[Math.floor(Math.random() * available.length)];
-  };
-
-  // Initialize cells on mount
-  useEffect(() => {
-    if (allImageUrls.length === 0) return;
-
-    const initialSet = new Set<string>();
-    const initialCells: CellState[] = [];
-
-    for (let i = 0; i < Math.min(GRID_CELL_COUNT, allImageUrls.length); i++) {
-      const url = getRandomImage(initialSet);
-      initialSet.add(url);
-      recentUrlsRef.current.add(url);
-      initialCells.push({
-        currentUrl: url,
-        nextUrl: null,
-        isFading: false,
-      });
-    }
-
-    setCells(initialCells);
-  }, []);
+  const [cells, setCells] = useState<CellState[]>(() =>
+    createInitialCells(allImageUrls, recentUrlsRef.current)
+  );
 
   // Interval for living gallery cell swapping
   useEffect(() => {
-    if (allImageUrls.length <= GRID_CELL_COUNT) return;
+    if (allImageUrls.length <= 1) return;
 
     const interval = setInterval(() => {
       if (document.visibilityState !== "visible") return;
@@ -60,7 +113,6 @@ export const LivingGallery: React.FC = () => {
         const currentVisibleUrls = new Set(prevCells.map((c) => c.currentUrl));
         const numToSwap = Math.min(3, prevCells.length);
 
-        // Pick numToSwap random distinct cell indices
         const indicesToSwap: number[] = [];
         while (indicesToSwap.length < numToSwap) {
           const randomIndex = Math.floor(Math.random() * prevCells.length);
@@ -77,9 +129,8 @@ export const LivingGallery: React.FC = () => {
             ...recentUrlsRef.current,
           ]);
 
-          const newUrl = getRandomImage(excludeSet);
+          const newUrl = getRandomImage(allImageUrls, excludeSet);
 
-          // Update recent URLs history (keep last ~15 images)
           recentUrlsRef.current.add(newUrl);
           if (recentUrlsRef.current.size > 15) {
             const firstValue = Array.from(recentUrlsRef.current)[0];
@@ -116,12 +167,8 @@ export const LivingGallery: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (allImageUrls.length === 0) {
-    return (
-      <div className="text-center py-12 text-muted-foreground">
-        Loading living photo gallery...
-      </div>
-    );
+  if (cells.length === 0) {
+    return null;
   }
 
   return (
