@@ -73,7 +73,7 @@ const About = () => {
               <MapPin className="w-6 h-6 text-primary" />
               <div>
                 <p className="font-medium text-foreground">Studio Location</p>
-                <p className="text-sm text-muted-foreground">Sector 4, Hiranmagri, Udaipur</p>
+                <p className="text-sm text-muted-foreground">Parshuram Chourhaya, Udaipur</p>
               </div>
             </div>
           </div>

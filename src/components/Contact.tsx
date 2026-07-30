@@ -191,7 +191,7 @@ const Contact = () => {
                   <div>
                     <h4 className="font-semibold text-primary-foreground mb-1">Visit Our Studio</h4>
                     <p className="text-primary-foreground/70">
-                      Sector 4, Hiranmagri, Udaipur<br />
+                      Parshuram Chourhaya, Udaipur<br />
                     </p>
                   </div>
                 </div>
