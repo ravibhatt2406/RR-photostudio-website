@@ -66,11 +66,6 @@ const loadPortfolioData = () => {
       return;
     }
 
-    if (seenSrcSet.has(src)) {
-      duplicateImages.push(pathStr);
-      return;
-    }
-
     const parts = pathStr.split("/");
     const portIdx = parts.indexOf("portfolio");
 
@@ -85,9 +80,15 @@ const loadPortfolioData = () => {
       return;
     }
 
+    const catKey = `${categoryFolder}:${src}`;
+    if (seenSrcSet.has(catKey)) {
+      duplicateImages.push(pathStr);
+      return;
+    }
+
     const filename = parts[parts.length - 1];
 
-    seenSrcSet.add(src);
+    seenSrcSet.add(catKey);
 
     photoList.push({
       src,
