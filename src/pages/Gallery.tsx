@@ -127,10 +127,10 @@ const Gallery: React.FC = () => {
               </TabsList>
             </div>
 
-            {/* Photo Grid */}
-            <TabsContent value={activeTab} className="mt-8">
+            {/* Photo Grid - All Work */}
+            <TabsContent value="all" className="mt-8">
               <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-                {filteredPhotos.map((photo, idx) => (
+                {photos.map((photo, idx) => (
                   <div
                     key={idx}
                     onClick={() => setSelectedPhotoIndex(idx)}
@@ -153,6 +153,37 @@ const Gallery: React.FC = () => {
                 ))}
               </div>
             </TabsContent>
+
+            {/* Photo Grid - Per Category */}
+            {categories.map((cat) => (
+              <TabsContent key={cat.id} value={cat.id} className="mt-8">
+                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+                  {photos
+                    .filter((p) => p.categoryFolder === cat.id)
+                    .map((photo, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => setSelectedPhotoIndex(filteredPhotos.indexOf(photo))}
+                        className="group relative overflow-hidden rounded-2xl cursor-pointer break-inside-avoid bg-secondary/30 border border-border/50 hover:border-gold/60 transition-all duration-300 shadow-sm hover:shadow-xl"
+                      >
+                        <img
+                          src={photo.src}
+                          alt={`RR Wedding Filmer - ${photo.categoryLabel}`}
+                          className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                          <span className="text-xs font-semibold text-gold tracking-wide uppercase">
+                            {photo.categoryLabel}
+                          </span>
+                          <p className="text-xs text-white/80 mt-1 font-medium">Click to view full size</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </TabsContent>
+            ))}
           </Tabs>
 
           {/* Films Section */}
