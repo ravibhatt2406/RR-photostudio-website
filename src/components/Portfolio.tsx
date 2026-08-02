@@ -47,7 +47,7 @@ const Portfolio: React.FC = () => {
               <Button
                 variant="gold"
                 size="lg"
-                className="px-8 shadow-gold text-base font-semibold group rounded-full"
+                className="px-8 shadow-gold text-base font-semibold group rounded-full animate-luxury-pulse"
               >
                 View Full Gallery
                 <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />

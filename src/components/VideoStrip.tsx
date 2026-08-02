@@ -46,13 +46,13 @@ export const VideoStrip: React.FC = () => {
         </h3>
       </div>
 
-      <div className="max-w-5xl mx-auto px-10 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-10 relative">
         <Carousel opts={{ loop: true, align: "center" }} className="w-full">
           <CarouselContent>
             {videoList.map((video, idx) => {
               const meta = videoMeta[idx % videoMeta.length];
               return (
-                <CarouselItem key={idx} className="basis-full md:basis-11/12 lg:basis-4/5">
+                <CarouselItem key={idx} className="basis-full md:basis-11/12 lg:basis-11/12">
                   <div className="p-2">
                     <div className="relative rounded-2xl overflow-hidden bg-black/90 shadow-2xl border border-gold/20 aspect-video group">
                       <video
