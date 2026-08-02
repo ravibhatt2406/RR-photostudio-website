@@ -102,13 +102,22 @@ const loadPortfolioData = () => {
     );
   });
 
-  const categories: CategoryItem[] = Array.from(categoryMap.entries()).map(
-    ([id, count]) => ({
+  const PREFERRED_ORDER = ["candid", "traditional", "haldi-mehendi"];
+
+  const categories: CategoryItem[] = Array.from(categoryMap.entries())
+    .map(([id, count]) => ({
       id,
       label: formatCategoryLabel(id),
       count,
-    })
-  );
+    }))
+    .sort((a, b) => {
+      const idxA = PREFERRED_ORDER.indexOf(a.id);
+      const idxB = PREFERRED_ORDER.indexOf(b.id);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return a.label.localeCompare(b.label);
+    });
 
   const report: PortfolioDataReport = {
     categoriesFoundCount: categories.length,
