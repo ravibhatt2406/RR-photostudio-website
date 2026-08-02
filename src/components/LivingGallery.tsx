@@ -17,38 +17,18 @@ const staticFallbackImages = [
   portfolio5,
 ];
 
-// Dynamically import all images from assets/portfolio subfolders using relative and absolute paths
-const imageModules = import.meta.glob(
-  [
-    "../assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}",
-    "/src/assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}",
-  ],
-  { eager: true }
-);
+import { allPortfolioUrls } from "@/lib/portfolio";
 
-// Deduplicate glob results by unique image URL
-const getUniqueUrls = (modules: Record<string, any>): string[] => {
-  const urlSet = new Set<string>();
-  Object.values(modules).forEach((mod: any) => {
-    const url = mod?.default || mod;
-    if (url && typeof url === "string") {
-      urlSet.add(url);
-    }
-  });
-  return Array.from(urlSet);
-};
-
-const globUrls: string[] = getUniqueUrls(imageModules);
 const allImageUrls: string[] =
-  globUrls.length > 0 ? globUrls : staticFallbackImages;
+  allPortfolioUrls.length > 0 ? allPortfolioUrls : staticFallbackImages;
 
 if (typeof window !== "undefined") {
   console.log(
-    `[LivingGallery] Discovered ${globUrls.length} unique portfolio images via import.meta.glob.`
+    `[LivingGallery] Discovered ${allPortfolioUrls.length} unique portfolio images via portfolio loader.`
   );
-  if (globUrls.length === 0) {
+  if (allPortfolioUrls.length === 0) {
     console.warn(
-      `[LivingGallery] No portfolio images discovered via glob. Using ${staticFallbackImages.length} static fallback assets.`
+      `[LivingGallery] No portfolio images discovered via loader. Using ${staticFallbackImages.length} static fallback assets.`
     );
   }
 }

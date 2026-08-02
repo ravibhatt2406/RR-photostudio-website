@@ -7,38 +7,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-// 1. Dynamic Photo Glob Import
-const photoModules = import.meta.glob(
-  [
-    '../assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
-    '/src/assets/portfolio/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
-  ],
-  { eager: true }
-);
+import { portfolioPhotos, portfolioCategories } from "@/lib/portfolio";
 
-interface PhotoItem {
-  src: string;
-  categoryFolder: string;
-  categoryLabel: string;
-  filename: string;
-}
-
-// Format folder names like "haldi-mehendi" -> "Haldi & Mehendi"
-const formatCategoryLabel = (folderName: string): string => {
-  if (folderName === "haldi-mehendi") return "Haldi & Mehendi";
-  if (folderName === "baby-shower") return "Baby Shower";
-  return folderName
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-};
-
-// 2. Dynamic Video Glob Import
+// Dynamic Video Glob Import
 const videoModules = import.meta.glob(
-  [
-    '../assets/portfolio/videos/*.{mp4,MP4}',
-    '/src/assets/portfolio/videos/*.{mp4,MP4}',
-  ],
+  "/src/assets/portfolio/videos/*.{mp4,MP4}",
   { eager: true }
 );
 const videoList = Object.entries(videoModules).map(([path, mod]: [string, any]) => {
@@ -63,47 +36,8 @@ const videoTitles = [
 const Gallery: React.FC = () => {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
-  // Build photo items array with categories (deduplicated by unique src)
-  const { photos, categories } = useMemo(() => {
-    const items: PhotoItem[] = [];
-    const categorySet = new Set<string>();
-    const seenSrc = new Set<string>();
-
-    Object.entries(photoModules).forEach(([pathStr, mod]: [string, any]) => {
-      const src = mod?.default || mod;
-      if (!src || typeof src !== "string" || seenSrc.has(src)) return;
-
-      const parts = pathStr.split("/");
-      const portIdx = parts.indexOf("portfolio");
-      if (portIdx !== -1 && portIdx < parts.length - 2) {
-        const folder = parts[portIdx + 1];
-        if (folder !== "rotate" && folder !== "videos") {
-          seenSrc.add(src);
-          categorySet.add(folder);
-          items.push({
-            src,
-            categoryFolder: folder,
-            categoryLabel: formatCategoryLabel(folder),
-            filename: parts[parts.length - 1],
-          });
-        }
-      }
-    });
-
-    const categoryList = Array.from(categorySet).map((folder) => ({
-      id: folder,
-      label: formatCategoryLabel(folder),
-    }));
-
-    if (typeof window !== "undefined") {
-      console.log(
-        `[Gallery] Loaded ${items.length} unique photos across ${categoryList.length} categories:`,
-        categoryList.map((c) => c.label).join(", ")
-      );
-    }
-
-    return { photos: items, categories: categoryList };
-  }, []);
+  const photos = portfolioPhotos;
+  const categories = portfolioCategories;
 
   const [activeTab, setActiveTab] = useState<string>("all");
 

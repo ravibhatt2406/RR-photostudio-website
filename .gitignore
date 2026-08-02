@@ -26,4 +26,6 @@ dist-ssr
 # Raw uncompressed root staging folder (ignored in git)
 /portfolio/
 
+# Vite temporary timestamp files
+*.timestamp*.mjs
 
