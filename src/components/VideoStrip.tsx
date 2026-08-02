@@ -9,10 +9,7 @@ import {
 
 // Import videos dynamically
 const videoModules = import.meta.glob(
-  [
-    '../assets/portfolio/videos/*.{mp4,MP4}',
-    '/src/assets/portfolio/videos/*.{mp4,MP4}',
-  ],
+  "/src/assets/portfolio/videos/*.{mp4,MP4}",
   { eager: true }
 );
 const videoList = Object.entries(videoModules).map(([path, mod]: [string, any]) => {
