@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap Location
-# TODO: If your custom domain is different from https://rrweddingfilmer.com, update the URL below
-Sitemap: https://rrweddingfilmer.com/sitemap.xml
+Sitemap: https://rrweddingfilmerudaipur.vercel.app/sitemap.xml
