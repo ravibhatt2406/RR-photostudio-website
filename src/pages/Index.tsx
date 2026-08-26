@@ -11,12 +11,12 @@ import { useEffect } from "react";
 const Index = () => {
   useEffect(() => {
     // Set page title and meta tags for SEO
-    document.title = "RR Wedding Filmer - Premium Wedding & Event Photography in Udaipur";
+    document.title = "RR Wedding Filmer | Wedding Photographer in Udaipur";
     
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute("content", "RR Wedding Filmer is Udaipur's premier photo studio specializing in wedding photography, cinematic films, pre-wedding shoots, baby showers, and event coverage. Capturing Forever.");
+      metaDescription.setAttribute("content", "RR Wedding Filmer is a premium wedding photography and cinematography studio in Udaipur, specializing in wedding photography, cinematic films, pre-wedding shoots, wedding films, and special events.");
     }
   }, []);
 

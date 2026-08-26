@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight, X, Film } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -38,6 +38,10 @@ const Gallery: React.FC = () => {
 
   const photos = portfolioPhotos;
   const categories = portfolioCategories;
+
+  useEffect(() => {
+    document.title = "Gallery | RR Wedding Filmer | Wedding Photographer in Udaipur";
+  }, []);
 
   const [activeTab, setActiveTab] = useState<string>("all");
 

@@ -1,0 +1,20 @@
+{
+  "name": "RR Wedding Filmer",
+  "short_name": "RR Wedding Filmer",
+  "description": "RR Wedding Filmer is a premium wedding photography and cinematography studio in Udaipur, specializing in wedding photography, cinematic films, pre-wedding shoots, wedding films, and special events.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0B132B",
+  "background_color": "#0B132B",
+  "display": "standalone"
+}
