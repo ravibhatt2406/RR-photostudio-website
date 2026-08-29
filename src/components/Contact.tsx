@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -166,6 +167,14 @@ const Contact = () => {
                   </span>
                 )}
               </Button>
+
+              <p className="text-xs text-muted-foreground text-center mt-3">
+                By submitting this form, you agree to our{" "}
+                <Link to="/privacy-policy" className="text-gold underline hover:text-gold/80 transition-colors">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
             </form>
           </div>
 

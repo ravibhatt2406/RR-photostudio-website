@@ -1,10 +1,15 @@
 import { Heart, MapPin, Phone, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 import rrLogo from "@/assets/rr-wedding-filmer-logo.jpg";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const scrollToSection = (href: string) => {
+    if (window.location.pathname !== "/") {
+      window.location.href = `/${href}`;
+      return;
+    }
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -51,6 +56,14 @@ const Footer = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/privacy-policy"
+                  className="text-background/70 hover:text-gold transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -132,9 +145,13 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-background/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-background/60">
-              © {currentYear} RR Wedding Filmer. All rights reserved.
-            </p>
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-sm text-background/60">
+              <span>© {currentYear} RR Wedding Filmer. All rights reserved.</span>
+              <span className="hidden md:inline">•</span>
+              <Link to="/privacy-policy" className="hover:text-gold transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
             <p className="flex items-center gap-1 text-sm text-background/60">
               Made with <Heart className="w-4 h-4 text-gold fill-gold" /> in Udaipur, Rajasthan
             </p>
