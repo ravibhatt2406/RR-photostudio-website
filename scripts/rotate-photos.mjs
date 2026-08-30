@@ -73,6 +73,34 @@ async function main() {
     }
   }
 
+  // 1b. Process Pre Wedding folder if present directly in root portfolio
+  const preWeddingNames = ['Pre Wedding', 'pre-wedding', 'Pre-Wedding'];
+  for (const pwName of preWeddingNames) {
+    const pwDir = path.join(rootPortfolioDir, pwName);
+    if (fs.existsSync(pwDir) && fs.statSync(pwDir).isDirectory()) {
+      const targetDir = path.join(srcPortfolioDir, 'pre-wedding');
+      fs.mkdirSync(targetDir, { recursive: true });
+
+      const files = fs.readdirSync(pwDir);
+      let count = 0;
+      for (const file of files) {
+        const filePath = path.join(pwDir, file);
+        if (fs.statSync(filePath).isFile()) {
+          const ext = path.extname(file).toLowerCase();
+          if (['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) {
+            const cleanName = path.parse(file).name.replace(/[^a-zA-Z0-9._-]/g, '_') + '.jpg';
+            const outPath = path.join(targetDir, cleanName);
+            if (!fs.existsSync(outPath)) {
+              const ok = await processImage(filePath, outPath, 0);
+              if (ok) count++;
+            }
+          }
+        }
+      }
+      console.log(`Pre-wedding photos from '${pwName}': ${count} new images processed into 'pre-wedding'.`);
+    }
+  }
+
   // 2. Process rotated candid photos if present
   const rotateDir = path.join(rootPortfolioDir, 'candid photos rotate');
   if (fs.existsSync(rotateDir)) {

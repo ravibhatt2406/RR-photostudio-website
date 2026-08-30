@@ -4,30 +4,37 @@ import { execSync } from 'child_process';
 
 const rootDir = process.cwd();
 const targetVideoDir = path.join(rootDir, 'src', 'assets', 'portfolio', 'videos');
-const rawVideoDir = path.join(rootDir, 'portfolio', 'vedio');
 
 if (!fs.existsSync(targetVideoDir)) {
   fs.mkdirSync(targetVideoDir, { recursive: true });
 }
 
-// Clean old files
-const existingFiles = fs.readdirSync(targetVideoDir);
-existingFiles.forEach(file => {
-  const fp = path.join(targetVideoDir, file);
-  if (fs.statSync(fp).isFile()) {
-    fs.unlinkSync(fp);
-  }
-});
+const rawVideoDirs = [
+  path.join(rootDir, 'portfolio', 'video'),
+  path.join(rootDir, 'portfolio', 'vedio'),
+  path.join(rootDir, 'portfolio', 'Video'),
+];
 
-const sourceFiles = fs.existsSync(rawVideoDir) ? fs.readdirSync(rawVideoDir) : [];
+let sourceFiles = [];
+for (const rawDir of rawVideoDirs) {
+  if (fs.existsSync(rawDir)) {
+    const files = fs.readdirSync(rawDir).map(file => ({ file, dir: rawDir }));
+    sourceFiles.push(...files);
+  }
+}
 
 console.log('--- Starting Web Video Optimization for Vercel (< 50MB total) ---');
 
-sourceFiles.forEach((file) => {
-  if (path.extname(file).toLowerCase() === '.mp4') {
+sourceFiles.forEach(({ file, dir: rawVideoDir }) => {
+  if (['.mp4', '.webm', '.mov'].includes(path.extname(file).toLowerCase())) {
     const inputPath = path.join(rawVideoDir, file);
     const cleanFileName = file.replace(/[^a-zA-Z0-9._-]/g, '_');
     const outputPath = path.join(targetVideoDir, cleanFileName);
+
+    if (fs.existsSync(outputPath)) {
+      console.log(`Video ${cleanFileName} already exists in target.`);
+      return;
+    }
 
     console.log(`Compressing ${file} for web deployment...`);
 

@@ -32,8 +32,12 @@ const IGNORED_FOLDERS = new Set(["rotate", "videos"]);
  */
 export const formatCategoryLabel = (folderName: string): string => {
   if (!folderName) return "";
-  if (folderName.toLowerCase() === "haldi-mehendi") {
+  const lower = folderName.toLowerCase();
+  if (lower === "haldi-mehendi") {
     return "Haldi & Mehendi";
+  }
+  if (lower === "pre-wedding" || lower === "prewedding" || lower === "pre wedding") {
+    return "Pre Wedding";
   }
   return folderName
     .split(/[-_]+/)
@@ -103,7 +107,7 @@ const loadPortfolioData = () => {
     );
   });
 
-  const PREFERRED_ORDER = ["candid", "traditional", "haldi-mehendi"];
+  const PREFERRED_ORDER = ["candid", "traditional", "haldi-mehendi", "pre-wedding"];
 
   const categories: CategoryItem[] = Array.from(categoryMap.entries())
     .map(([id, count]) => ({

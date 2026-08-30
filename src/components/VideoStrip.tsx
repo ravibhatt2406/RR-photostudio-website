@@ -7,30 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-// Import videos dynamically
-const videoModules = import.meta.glob(
-  "/src/assets/portfolio/videos/*.{mp4,MP4}",
-  { eager: true }
-);
-const videoList = Object.entries(videoModules).map(([path, mod]: [string, any]) => {
-  const filename = path.split('/').pop() || '';
-  return {
-    src: mod.default || mod,
-    filename,
-  };
-});
-
-// Curated titles for wedding films
-const videoMeta = [
-  { title: "A Royal Promise", subtitle: "Grand Destination Wedding — City Palace, Udaipur" },
-  { title: "Lakeside Reverie", subtitle: "Pre-Wedding Teaser — Lake Pichola" },
-  { title: "Timeless Moments", subtitle: "Cinematic Highlight Reel" },
-  { title: "Eternal Vows", subtitle: "Royal Heritage Celebration" },
-  { title: "Celebration of Love", subtitle: "Haldi & Mehendi Festivities" },
-  { title: "Unscripted Emotions", subtitle: "Candid Wedding Teaser" },
-  { title: "Symphony of Hearts", subtitle: "Full Ceremony Highlights" },
-  { title: "Forever & Always", subtitle: "Sunset Pre-Wedding Film" },
-];
+import { videoList } from "@/lib/videos";
 
 export const VideoStrip: React.FC = () => {
   if (videoList.length === 0) return null;
@@ -50,7 +27,6 @@ export const VideoStrip: React.FC = () => {
         <Carousel opts={{ loop: true, align: "center" }} className="w-full">
           <CarouselContent>
             {videoList.map((video, idx) => {
-              const meta = videoMeta[idx % videoMeta.length];
               return (
                 <CarouselItem key={idx} className="basis-full md:basis-11/12 lg:basis-11/12">
                   <div className="p-2">
@@ -66,10 +42,10 @@ export const VideoStrip: React.FC = () => {
                     {/* Caption in Serif Font */}
                     <div className="text-center mt-5">
                       <h4 className="font-serif text-2xl font-bold text-foreground">
-                        {meta.title}
+                        {video.title}
                       </h4>
                       <p className="text-sm text-gold font-medium mt-1">
-                        {meta.subtitle}
+                        {video.subtitle}
                       </p>
                     </div>
                   </div>
